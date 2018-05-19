@@ -10,6 +10,8 @@ const toSource = require('to-source');
 const Twit = require('twit');
 const T = new Twit(config.twitter);
 
+const countWords = require('count-words'); // use: countWords(string, boolean_ignore_case)
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
@@ -28,9 +30,11 @@ router.get('/twitter/', function(req, res, next) {
     data.statuses.forEach(tweet => {
 
       str += tweet.text;
-      console.log(str);
     });
-    res.json(data);
+    const news = [];
+    const tweets = Object.entries(countWords(str, true));
+    res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
+    // res.json(Object.entries(countWords(str, true)));
   });
 });
 
