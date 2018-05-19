@@ -43,6 +43,7 @@ function sanitizeStr(str) {
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
+  // retrieve tweets
   T.get('search/tweets', { q: `news`, count: 1000 }, function(err, data, response) {
     
     let twitStr = '';
@@ -51,36 +52,30 @@ router.get('/', function(req, res, next) {
     });
     const tweets = sanitizeStr(twitStr);
 
-    let news = [['foo', 12], ['bar', 6]];
-
-    res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
-  });
-
-});
-
-/* GET newsapi page. */
-router.get('/news/', function(req, res, next) {
-
-  const options = {
-    url: `https://newsapi.org/v2/everything?q=news`,
-    headers: {
-      'X-Api-Key': config.newsApiKey
+    // prepare to retrieve news headlines and summaries
+    const options = {
+      url: `https://newsapi.org/v2/everything?q=news`,
+      headers: {
+        'X-Api-Key': config.newsApiKey
+      }
     }
-  }
-
-  request(options, (err, response, body) => {
-    if (err) { console.log(err) }
-    data = JSON.parse(body);
-
-    let newsStr = '';
-
-    data.articles.forEach(article => {
-      newsStr += article.title;
-      newsStr += article.description;
+  
+    // retrieve news headlines and summaries
+    request(options, (err, response, body) => {
+      if (err) { console.log(err) }
+      data = JSON.parse(body);
+  
+      let newsStr = '';
+  
+      data.articles.forEach(article => {
+        newsStr += article.title;
+        newsStr += article.description;
+      });
+      const news = sanitizeStr(newsStr);
+      
+      // render the results to the page
+      res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
     });
-
-
-    res.json(data);
   });
 });
 
