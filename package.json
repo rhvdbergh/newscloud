@@ -13,6 +13,7 @@
     "http-errors": "~1.6.2",
     "morgan": "~1.9.0",
     "pug": "2.0.0-beta11",
+    "request": "^2.86.0",
     "stopword": "^0.1.10",
     "to-source": "^2.0.3",
     "twit": "^2.2.9",

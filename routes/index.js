@@ -3,6 +3,8 @@ var router = express.Router();
 
 const config = require('../bin/config.js');
 
+const request = require('request'); // works like fetch(), but easier to set custom headers 
+
 // to-source is is needed to pass the array as a normal string - but as source code, 
 // so toString() does not work (result of toString() on arrays = csv)
 const toSource = require('to-source'); 
@@ -50,5 +52,21 @@ router.get('/', function(req, res, next) {
 
 });
 
+/* GET newsapi page. */
+router.get('/news/', function(req, res, next) {
+
+  const options = {
+    url: `https://newsapi.org/v2/everything?q=news`,
+    headers: {
+      'X-Api-Key': config.newsApiKey
+    }
+  }
+
+  request(options, (err, response, body) => {
+    if (err) { console.log(err) }
+    msg = JSON.parse(body);
+    res.json(msg);
+  });
+});
 
 module.exports = router;
