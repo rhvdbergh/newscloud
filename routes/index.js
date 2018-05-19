@@ -9,8 +9,8 @@ const toSource = require('to-source');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   let news = [['foo', 12], ['bar', 6]];
-  console.log(toSource(news));
-  res.render('index', { title: 'NewsCloud', news: toSource(news) });
+  let tweets = [['tweet', 12], ['terrific', 6]];
+  res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
 });
 
 module.exports = router;
