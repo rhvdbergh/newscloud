@@ -18,32 +18,38 @@ const wordsOnly = require('words-only');
 // can also take a user defined list of words, passed as an array as second parameter
 const sw = require('stopword'); 
 
+// HELPER METHODS //
+
+// helper method to clean data in string
+function sanitizeStr(str) {
+
+  let newStr = wordsOnly(str);
+
+    newStr = sw.removeStopwords(newStr.split(' ')).join(' ');
+    newStr = sw.removeStopwords(newStr.split(' '), ['t', 'co', 'http', 'https', 'rt', 's', 'news']).join(' ');
+
+    const obj = countWords(newStr, true);
+    const unsorted = Object.entries(obj);
+
+    const sorted = unsorted.sort((a, b) => {
+      return b[1] - a[1];
+    }).slice(0, 29);
+
+  return sorted;
+}
+
+// ROUTES //
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
   T.get('search/tweets', { q: `news`, count: 1000 }, function(err, data, response) {
     
-    let str = '';
-
+    let twitStr = '';
     data.statuses.forEach(tweet => {
-
-      str += tweet.text;
+      twitStr += tweet.text;
     });
-
-    str = wordsOnly(str);
-
-    str = sw.removeStopwords(str.split(' ')).join(' ');
-    str = sw.removeStopwords(str.split(' '), ['t', 'co', 'http', 'https', 'rt', 's', 'news']).join(' ');
-
-    
-    const tweetsObject = countWords(str, true);
-    const tweetsUnsorted = Object.entries(tweetsObject);
-
-    const tweets = tweetsUnsorted.sort((a, b) => {
-      return b[1] - a[1];
-    }).slice(0, 29);
-
-    console.log(tweets);
+    const tweets = sanitizeStr(twitStr);
 
     let news = [['foo', 12], ['bar', 6]];
 
@@ -64,8 +70,17 @@ router.get('/news/', function(req, res, next) {
 
   request(options, (err, response, body) => {
     if (err) { console.log(err) }
-    msg = JSON.parse(body);
-    res.json(msg);
+    data = JSON.parse(body);
+
+    let newsStr = '';
+
+    data.articles.forEach(article => {
+      newsStr += article.title;
+      newsStr += article.description;
+    });
+
+
+    res.json(data);
   });
 });
 
