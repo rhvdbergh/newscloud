@@ -19,14 +19,6 @@ const sw = require('stopword');
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
-  let news = [['foo', 12], ['bar', 6]];
-  let tweets = [['tweet', 12], ['terrific', 6]];
-  res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
-});
-
-/* GET twitter page. */
-router.get('/twitter/', function(req, res, next) {
-
   T.get('search/tweets', { q: `news`, count: 1000 }, function(err, data, response) {
     
     let str = '';
@@ -35,7 +27,6 @@ router.get('/twitter/', function(req, res, next) {
 
       str += tweet.text;
     });
-    const news = [];
 
     str = wordsOnly(str);
 
@@ -52,9 +43,12 @@ router.get('/twitter/', function(req, res, next) {
 
     console.log(tweets);
 
+    let news = [['foo', 12], ['bar', 6]];
 
     res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
   });
+
 });
+
 
 module.exports = router;
