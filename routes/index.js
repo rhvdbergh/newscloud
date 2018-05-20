@@ -56,7 +56,7 @@ router.get('/:searchTerm', function(req, res, next) {
   let searchTerm = req.params.searchTerm;
 
   // retrieve tweets
-  T.get('search/tweets', { q: searchTerm, count: 1000 }, function(err, data, response) {
+  T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
     
     let twitStr = '';
     data.statuses.forEach(tweet => {
@@ -65,8 +65,11 @@ router.get('/:searchTerm', function(req, res, next) {
     const tweets = sanitizeStr(twitStr, [searchTerm]);
 
     // prepare to retrieve news headlines and summaries
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    console.log(weekAgo.toISOString());
     const options = {
-      url: `https://newsapi.org/v2/everything?q=${searchTerm}`,
+      url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}`,
       headers: {
         'X-Api-Key': config.newsApiKey
       }
