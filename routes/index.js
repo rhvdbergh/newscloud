@@ -38,7 +38,7 @@ function sanitizeStr(str, removeWords) {
 
     const sorted = unsorted.sort((a, b) => {
       return b[1] - a[1];
-    }).slice(0, 29);
+    }).slice(0, 29); // returns top 30 results
 
   return sorted;
 }
