@@ -17,16 +17,21 @@ const wordsOnly = require('words-only');
 // stopword takes an array, removes common words, and returns an array
 // can also take a user defined list of words, passed as an array as second parameter
 const sw = require('stopword'); 
+const stopwordList = require('../bin/word_list.js');
 
 // HELPER METHODS //
 
 // helper method to clean data in string
-function sanitizeStr(str) {
+// first parameter is the string to be cleaned
+// second parameter is custom words to remove from string, in the form of an array
+function sanitizeStr(str, removeWords) {
 
   let newStr = wordsOnly(str);
 
+    // remove common English words 
     newStr = sw.removeStopwords(newStr.split(' ')).join(' ');
-    newStr = sw.removeStopwords(newStr.split(' '), ['t', 'co', 'http', 'https', 'rt', 's', 'news']).join(' ');
+    // remove user defined words
+    newStr = sw.removeStopwords(newStr.split(' '), [...removeWords, ...stopwordList]).join(' ');
 
     const obj = countWords(newStr, true);
     const unsorted = Object.entries(obj);
@@ -50,7 +55,7 @@ router.get('/', function(req, res, next) {
     data.statuses.forEach(tweet => {
       twitStr += tweet.text;
     });
-    const tweets = sanitizeStr(twitStr);
+    const tweets = sanitizeStr(twitStr, [`news`]);
 
     // prepare to retrieve news headlines and summaries
     const options = {
@@ -71,7 +76,7 @@ router.get('/', function(req, res, next) {
         newsStr += article.title;
         newsStr += article.description;
       });
-      const news = sanitizeStr(newsStr);
+      const news = sanitizeStr(newsStr, [`news`]);
       
       // render the results to the page
       res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
