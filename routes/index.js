@@ -86,13 +86,12 @@ router.get('/:searchTerm', function(req, res, next) {
       data = JSON.parse(body);
   
       let newsStr = '';
-  
       data.articles.forEach(article => {
         newsStr += article.title;
         newsStr += article.description;
       });
       const news = sanitizeStr(newsStr, [searchTerm]);
-      
+
       // render the results to the page
       res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
     });
