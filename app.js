@@ -3,11 +3,22 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var mongoose = require('mongoose');
+
+var SearchTerm = require('./models/searchTerm');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// set up mongoose connection
+mongoose.connect('mongodb://localhost/newscloud');
+var db = mongoose.connection;
+db.on('error', () => { console.log('There was an error connecting to the database.')});
+db.once('open', () => {
+  console.log('Database newscloud successfully connected.');
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+const mongoose = require('mongoose');
+
+const SearchTerm = require('../models/searchTerm');
+
 const config = require('../bin/config.js');
 
 const request = require('request'); // works like fetch(), but easier to set custom headers 
@@ -80,21 +84,24 @@ router.get('/:searchTerm', function(req, res, next) {
       }
     }
   
-    // retrieve news headlines and summaries
-    request(options, (err, response, body) => {
-      if (err) { console.log(err) }
-      data = JSON.parse(body);
+    // // retrieve news headlines and summaries
+    // request(options, (err, response, body) => {
+    //   if (err) { console.log(err) }
+    //   data = JSON.parse(body);
   
-      let newsStr = '';
-      data.articles.forEach(article => {
-        newsStr += article.title;
-        newsStr += article.description;
-      });
-      const news = sanitizeStr(newsStr, [searchTerm]);
+    //   let newsStr = '';
+    //   data.articles.forEach(article => {
+    //     newsStr += article.title;
+    //     newsStr += article.description;
+    //   });
+    //   const news = sanitizeStr(newsStr, [searchTerm]); TODO: uncomment, so as not to go over rate limit
+  
+    // TODO: delete or comment out
+    const news = [];
 
       // render the results to the page
       res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
-    });
+    // }); TODO: uncomment
   });
 });
 
