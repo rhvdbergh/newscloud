@@ -1,48 +1,9 @@
 extends layout
 
 block content
-  nav.navbar.navbar-expand-lg.navbar-light.bg-dark.sticky-top
-    button.btn.btn-dark(type='button', data-toggle='modal', data-target='#loginModal')
-      | Login
-    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-      span.navbar-toggler-icon
-    #navbarSupportedContent.collapse.navbar-collapse
-      ul.navbar-nav.mr-auto
-        li.nav-item
-          a.nav-link.text-white(href='#')
-            | Home 
-            span.sr-only (current)
-        li.nav-item
-          a.nav-link.text-white(href='#') About
-      form.form-inline.my-2.my-lg-0
-        input.form-control.mr-sm-2(type='search', placeholder='Search', aria-label='Search')
-        button.btn.btn-outline-secondary.my-2.my-sm-0(type='submit') Search 
-  .jumbotron.jumbotron-fluid
-    .container
-      h1.display-4.text-center.text-white= title
-      p.lead.text-center.text-white
-        | News vs Twitter!
-  .container
-    .row
-      .col-lg#news_col
-        h1.display-5.text-center.bg-dark.text-white.shadow-lg News
-        canvas#news_canvas.shadow-lg
-      .col-lg#twitter_col
-        h1.display-5.text-center.bg-dark.text-white.shadow-lg Twitter
-        canvas#twitter_canvas.shadow-lg
-  nav.navbar.fixed-bottom.navbar-light.bg-dark
-    .container.col-12
-      p.text-white News headlines and summaries provided by 
-        a(href='https://newsapi.org') News API
-  #loginModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='loginModalTitle', aria-hidden='true')
-    .modal-dialog.modal-dialog-centered(role='document')
-      .modal-content
-        .modal-header
-          h5#loginModalTitle.modal-title Login
-          button.close(type='button', data-dismiss='modal', aria-label='Close')
-            span(aria-hidden='true') ×
-        .modal-body
-          | ...
-        .modal-footer
-          button.btn.btn-primary(type='button') Login
+  include navbar.pug 
+  include jumbotron.pug
+  include canvas.pug
+  include footer.pug
+  include modal.pug
   include scripts.pug
