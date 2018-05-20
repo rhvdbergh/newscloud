@@ -1,9 +1,21 @@
 extends layout
 
 block content
-  h1= title
-  canvas#news_canvas
-  canvas#twitter_canvas
-  p News headlines and summaries provided by 
-   a(href='https://newsapi.org') News API
+  .jumbotron.jumbotron-fluid
+    .container
+      h1.display-4.text-center= title
+      p.lead.text-center
+        | News vs Twitter!
+  .container
+    .row
+      .col-lg#news_col
+        h1.display-5.text-center News
+        canvas#news_canvas
+      .col-lg#twitter_col
+        h1.display-5.text-center Twitter
+        canvas#twitter_canvas
+  nav.navbar.fixed-bottom.navbar-light.bg-light
+    .container.col-12
+      p News headlines and summaries provided by 
+        a(href='https://newsapi.org') News API
   include scripts.pug

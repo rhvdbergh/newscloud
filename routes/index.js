@@ -40,7 +40,12 @@ function sanitizeStr(str, removeWords) {
       return b[1] - a[1];
     }).slice(0, 29); // returns top 30 results
 
-  return sorted;
+    // multiply font size by 4 for better presentation
+    const blowup = sorted.map(el => {
+      return [el[0], el[1] * 4]
+    });
+
+  return blowup;
 }
 
 // ROUTES //
@@ -69,7 +74,7 @@ router.get('/:searchTerm', function(req, res, next) {
     weekAgo.setDate(weekAgo.getDate() - 7);
     console.log(weekAgo.toISOString());
     const options = {
-      url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}`,
+      url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
       headers: {
         'X-Api-Key': config.newsApiKey
       }
