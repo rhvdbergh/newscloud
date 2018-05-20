@@ -47,19 +47,26 @@ function sanitizeStr(str, removeWords) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  res.redirect('/news');
+});
+
+/* GET search page. */
+router.get('/:searchTerm', function(req, res, next) {
   
+  let searchTerm = req.params.searchTerm;
+
   // retrieve tweets
-  T.get('search/tweets', { q: `news`, count: 1000 }, function(err, data, response) {
+  T.get('search/tweets', { q: searchTerm, count: 1000 }, function(err, data, response) {
     
     let twitStr = '';
     data.statuses.forEach(tweet => {
       twitStr += tweet.text;
     });
-    const tweets = sanitizeStr(twitStr, [`news`]);
+    const tweets = sanitizeStr(twitStr, [searchTerm]);
 
     // prepare to retrieve news headlines and summaries
     const options = {
-      url: `https://newsapi.org/v2/everything?q=news`,
+      url: `https://newsapi.org/v2/everything?q=${searchTerm}`,
       headers: {
         'X-Api-Key': config.newsApiKey
       }
@@ -76,7 +83,7 @@ router.get('/', function(req, res, next) {
         newsStr += article.title;
         newsStr += article.description;
       });
-      const news = sanitizeStr(newsStr, [`news`]);
+      const news = sanitizeStr(newsStr, [searchTerm]);
       
       // render the results to the page
       res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
