@@ -121,14 +121,44 @@ router.get('/:searchTerm', function(req, res, next) {
         .then(() => {
           // render the results to the page
           res.render('index', { 
-            title: 'NewsCloud', 
             news: toSource(news), 
             tweets: toSource(tweets),
             latest: latest,
-            searchTerm: searchTerm });
+            searchTerm: searchTerm,
+            buttonTitle: 'About' });
         });
       });
     });
+});
+
+/* GET about/info page. */
+router.get('/about/info', (req, res, next) => {
+
+  res.render('about', { buttonTitle: 'Random Search' });
+});
+
+/* GET random/search page */
+router.get('/random/search', (req, res, next) => {
+
+  // pick random letters
+  const rndLtrs = "abcdefghijklmnoprstuvwy";
+  const rndLtrA = rndLtrs[Math.floor(Math.random() * 23)];
+  const rndLtrB = rndLtrs[Math.floor(Math.random() * 23)];
+
+  // pick a random number of letters between rndLtrA and B
+  const rndNum = 2 + Math.floor(Math.random() * 4);
+  let wildcards = '';
+  for (let i=0; i <= rndNum; i++) {
+    wildcards += '?';
+  }
+
+  // use the datamuse api to retrieve a random word
+
+  request({url: `https://api.datamuse.com/words?sp=${rndLtrA}${wildcards}${rndLtrB}&max=1`}, (err, response, body) => {
+    if (err) { console.log(err) }
+    data = JSON.parse(body);
+  res.redirect(`/${data[0].word}`);
+});
 });
 
 module.exports = router;
