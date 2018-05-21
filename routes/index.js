@@ -64,8 +64,8 @@ router.get('/:searchTerm', function(req, res, next) {
 
   let searchTerm = req.params.searchTerm;
   
+  // update the MongoDB newscloud entry for this search term, or create if necessary
   if (searchTerm !== 'favicon.ico') {  // if GET /favicon.ico, just ignore and skip forward
-  
     SearchTerm.findOne({ searchTerm: searchTerm }, null, {}, (err, term) => {
       if (term) { // there is already an instance of the search term in the db
         let date = new Date();
@@ -78,25 +78,25 @@ router.get('/:searchTerm', function(req, res, next) {
     });
   }
 
-  // retrieve tweets
-  T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
+  // // retrieve tweets
+  // T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
     
-    let twitStr = '';
-    data.statuses.forEach(tweet => {
-      twitStr += tweet.text;
-    });
-    const tweets = sanitizeStr(twitStr, [searchTerm]);
+  //   let twitStr = '';
+  //   data.statuses.forEach(tweet => {
+  //     twitStr += tweet.text;
+  //   });
+  //   const tweets = sanitizeStr(twitStr, [searchTerm]);
 
-    // prepare to retrieve news headlines and summaries
-    const weekAgo = new Date();
-    weekAgo.setDate(weekAgo.getDate() - 7);
-    console.log(weekAgo.toISOString());
-    const options = {
-      url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
-      headers: {
-        'X-Api-Key': config.newsApiKey
-      }
-    }
+  //   // prepare to retrieve news headlines and summaries
+  //   const weekAgo = new Date();
+  //   weekAgo.setDate(weekAgo.getDate() - 7);
+  //   console.log(weekAgo.toISOString());
+  //   const options = {
+  //     url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
+  //     headers: {
+  //       'X-Api-Key': config.newsApiKey
+  //     }
+  //   } TODO: uncomment this section, for rate limiting purposes turned off
   
     // // retrieve news headlines and summaries
     // request(options, (err, response, body) => {
@@ -112,11 +112,12 @@ router.get('/:searchTerm', function(req, res, next) {
   
     // TODO: delete or comment out
     const news = [];
+    const tweets = [];
 
       // render the results to the page
       res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
     // }); TODO: uncomment
-  });
+  // }); TODO: uncomment
 });
 
 module.exports = router;
