@@ -124,7 +124,8 @@ router.get('/:searchTerm', function(req, res, next) {
             title: 'NewsCloud', 
             news: toSource(news), 
             tweets: toSource(tweets),
-            latest: latest });
+            latest: latest,
+            searchTerm: searchTerm });
         });
       });
     });
