@@ -114,8 +114,22 @@ router.get('/:searchTerm', function(req, res, next) {
     const news = [];
     const tweets = [];
 
+    //retrieve latest searches
+    let latest = [];
+    SearchTerm.find().sort({ field: 'asc', lastUpdated: -1 }).limit(20)
+      .then(terms => {
+          terms.forEach(term => {
+            latest.push({ term: term.searchTerm, count: term.count });
+          });
+        })  
+        .then(() => {
+        res.render('index', { 
+          title: 'NewsCloud', 
+          news: toSource(news), 
+          tweets: toSource(tweets),
+          latest: latest });
+      });
       // render the results to the page
-      res.render('index', { title: 'NewsCloud', news: toSource(news), tweets: toSource(tweets) });
     // }); TODO: uncomment
   // }); TODO: uncomment
 });

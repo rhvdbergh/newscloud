@@ -38,5 +38,6 @@ a {
 }
 
 .marquee3k {
+    overflow: hidden;
     color: white;
 }
