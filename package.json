@@ -20,5 +20,8 @@
     "twit": "^2.2.9",
     "wordcloud": "^1.1.0",
     "words-only": "0.0.2"
+  },
+  "devDependencies": {
+    "marquee3000": "^1.0.9"
   }
 }
