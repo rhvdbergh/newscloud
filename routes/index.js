@@ -78,42 +78,38 @@ router.get('/:searchTerm', function(req, res, next) {
     });
   }
 
-  // // retrieve tweets
-  // T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
+  // retrieve tweets
+  T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
     
-  //   let twitStr = '';
-  //   data.statuses.forEach(tweet => {
-  //     twitStr += tweet.text;
-  //   });
-  //   const tweets = sanitizeStr(twitStr, [searchTerm]);
+    let twitStr = '';
+    data.statuses.forEach(tweet => {
+      twitStr += tweet.text;
+    });
+    const tweets = sanitizeStr(twitStr, [searchTerm]);
 
-  //   // prepare to retrieve news headlines and summaries
-  //   const weekAgo = new Date();
-  //   weekAgo.setDate(weekAgo.getDate() - 7);
-  //   console.log(weekAgo.toISOString());
-  //   const options = {
-  //     url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
-  //     headers: {
-  //       'X-Api-Key': config.newsApiKey
-  //     }
-  //   } TODO: uncomment this section, for rate limiting purposes turned off
+    // prepare to retrieve news headlines and summaries
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    console.log(weekAgo.toISOString());
+    const options = {
+      url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
+      headers: {
+        'X-Api-Key': config.newsApiKey
+      }
+    }
   
-    // // retrieve news headlines and summaries
-    // request(options, (err, response, body) => {
-    //   if (err) { console.log(err) }
-    //   data = JSON.parse(body);
+    // retrieve news headlines and summaries
+    request(options, (err, response, body) => {
+      if (err) { console.log(err) }
+      data = JSON.parse(body);
   
-    //   let newsStr = '';
-    //   data.articles.forEach(article => {
-    //     newsStr += article.title;
-    //     newsStr += article.description;
-    //   });
-    //   const news = sanitizeStr(newsStr, [searchTerm]); TODO: uncomment, so as not to go over rate limit
+      let newsStr = '';
+      data.articles.forEach(article => {
+        newsStr += article.title;
+        newsStr += article.description;
+      });
+      const news = sanitizeStr(newsStr, [searchTerm]);
   
-    // TODO: delete or comment out
-    const news = [];
-    const tweets = [];
-
     //retrieve latest searches
     let latest = [];
     SearchTerm.find().sort({ field: 'asc', lastUpdated: -1 }).limit(20)
@@ -123,15 +119,15 @@ router.get('/:searchTerm', function(req, res, next) {
           });
         })  
         .then(() => {
-        res.render('index', { 
-          title: 'NewsCloud', 
-          news: toSource(news), 
-          tweets: toSource(tweets),
-          latest: latest });
+          // render the results to the page
+          res.render('index', { 
+            title: 'NewsCloud', 
+            news: toSource(news), 
+            tweets: toSource(tweets),
+            latest: latest });
+        });
       });
-      // render the results to the page
-    // }); TODO: uncomment
-  // }); TODO: uncomment
+    });
 });
 
 module.exports = router;
