@@ -8,7 +8,7 @@ var Schema = mongoose.Schema;
 var SearchTermSchema = new Schema({
     searchTerm: { type: String, required: true },
     lastUpdated: { type: Date, default: Date.now },
-    count: {type: Number, required: true }
+    count: {type: Number, default: 1 }
 });
 
 module.exports = mongoose.model("SearchTerm", SearchTermSchema);

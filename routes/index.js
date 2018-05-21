@@ -61,8 +61,22 @@ router.get('/', function(req, res, next) {
 
 /* GET search page. */
 router.get('/:searchTerm', function(req, res, next) {
-  
+
   let searchTerm = req.params.searchTerm;
+  
+  if (searchTerm !== 'favicon.ico') {  // if GET /favicon.ico, just ignore and skip forward
+  
+    SearchTerm.findOne({ searchTerm: searchTerm }, null, {}, (err, term) => {
+      if (term) { // there is already an instance of the search term in the db
+        let date = new Date();
+        term.count++;
+        term.lastUpdated = date;
+        term.save();
+      } else { // create a new entry in the db for this search term
+        SearchTerm.create({ searchTerm: searchTerm });
+      }
+    });
+  }
 
   // retrieve tweets
   T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
