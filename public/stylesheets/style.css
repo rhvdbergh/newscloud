@@ -1,5 +1,6 @@
 body {
     padding: 0;
+    padding-bottom: 60px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background-color: #464136;
     /* = bootstrap bg-secondary */
@@ -40,4 +41,8 @@ a {
 .marquee3k {
     overflow: hidden;
     color: white;
+}
+
+#footer {
+    margin-top: 40px;
 }
