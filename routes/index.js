@@ -96,6 +96,12 @@ router.get('/:searchTerm', function(req, res, next) {
   // retrieve tweets
   T.get('search/tweets', { q: searchTerm, count: 100 }, function(err, data, response) {
     
+    if (err) {
+      err.message = 'Error retrieving tweets: ' + err.message;
+      console.log(err.message);
+      next(err);
+    }
+
     let twitStr = '';
     data.statuses.forEach(tweet => {
       twitStr += tweet.text;
@@ -105,7 +111,6 @@ router.get('/:searchTerm', function(req, res, next) {
     // prepare to retrieve news headlines and summaries
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
-    console.log(weekAgo.toISOString());
     const options = {
       url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
       headers: {
@@ -115,7 +120,12 @@ router.get('/:searchTerm', function(req, res, next) {
   
     // retrieve news headlines and summaries
     request(options, (err, response, body) => {
-      if (err) { console.log(err) }
+      if (err) { 
+        err.message = 'Error retrieving news headlines and summaries: ' + err.message;
+        console.log(err.message);
+        next(err);
+      }
+
       data = JSON.parse(body);
   
       let newsStr = '';
@@ -168,12 +178,17 @@ router.get('/random/search', (req, res, next) => {
   }
 
   // use the datamuse api to retrieve a random word
-
   request({url: `https://api.datamuse.com/words?sp=${rndLtrA}${wildcards}${rndLtrB}&max=1`}, (err, response, body) => {
-    if (err) { console.log(err) }
+    if (err) { 
+      err.message = 'Error retrieving random word: ' + err.message;
+      console.log(err);
+      next(err);
+    }
+
     data = JSON.parse(body);
-  res.redirect(`/${data[0].word}`);
-});
+
+    res.redirect(`/${data[0].word}`);
+  });
 });
 
 module.exports = router;
