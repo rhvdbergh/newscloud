@@ -13,7 +13,7 @@ var usersRouter = require('./routes/users');
 var app = express();
 
 // set up mongoose connection
-mongoose.connect('mongodb://localhost/newscloud');
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/newscloud');
 var db = mongoose.connection;
 db.on('error', () => { console.log('There was an error connecting to the database.')});
 db.once('open', () => {
