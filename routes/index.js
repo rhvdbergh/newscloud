@@ -82,6 +82,11 @@ router.get('/:searchTerm', function(req, res, next) {
   // update the MongoDB newscloud entry for this search term, or create if necessary
   if (searchTerm !== 'favicon.ico') {  // if GET /favicon.ico, just ignore and skip forward
     SearchTerm.findOne({ searchTerm: searchTerm }, null, {}, (err, term) => {
+
+      if (err) {
+        next(err);
+      };
+
       if (term) { // there is already an instance of the search term in the db
         let date = new Date();
         term.count++;
@@ -128,11 +133,17 @@ router.get('/:searchTerm', function(req, res, next) {
 
       data = JSON.parse(body);
   
-      let newsStr = '';
-      data.articles.forEach(article => {
-        newsStr += article.title;
-        newsStr += article.description;
-      });
+      if (data.status === "error" && data.code === "rateLimited") {
+        let err = new Error("NewsCloud has exceed its rate limit for the News API. Please try again later.");
+        let newsStr = 'Unfortunately, no news today. Unfortunately, too, no news is bad news in this case ... the News API rate limit has been exceeded for this web app.';
+        next(err);
+      } else {
+        let newsStr = '';
+        data.articles.forEach(article => {
+          newsStr += article.title;
+          newsStr += article.description;
+        });
+      } // end else
       const news = sanitizeStr(newsStr, [searchTerm]);
   
     //retrieve latest searches
