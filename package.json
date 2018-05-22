@@ -16,10 +16,10 @@
     "pug": "2.0.0-beta11",
     "request": "^2.86.0",
     "stopword": "^0.1.10",
+    "text-cleaner": "^0.3.0",
     "to-source": "^2.0.3",
     "twit": "^2.2.9",
-    "wordcloud": "^1.1.0",
-    "words-only": "0.0.2"
+    "wordcloud": "^1.1.0"
   },
   "devDependencies": {
     "marquee3000": "^1.0.9"

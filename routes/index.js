@@ -17,11 +17,11 @@ const Twit = require('twit');
 const T = new Twit(config.twitter);
 
 const countWords = require('count-words'); // use: countWords(string, boolean_ignore_case)
-const wordsOnly = require('words-only');
 // stopword takes an array, removes common words, and returns an array
 // can also take a user defined list of words, passed as an array as second parameter
 const sw = require('stopword'); 
 const stopwordList = require('../bin/word_list.js');
+const TextCleaner = require('text-cleaner');
 
 // HELPER METHODS //
 
@@ -30,7 +30,7 @@ const stopwordList = require('../bin/word_list.js');
 // second parameter is custom words to remove from string, in the form of an array
 function sanitizeStr(str, removeWords) {
 
-  let newStr = wordsOnly(str);
+    let newStr = TextCleaner(str).toLowerCase().trim().stripEmails().stripHtml().removeChars({ replaceWith: ' ', exclude: "'"}).condense().valueOf();
 
     // remove common English words 
     newStr = sw.removeStopwords(newStr.split(' ')).join(' ');
