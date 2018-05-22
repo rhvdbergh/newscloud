@@ -56,7 +56,7 @@ function sanitizeStr(str, removeWords) {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.redirect('/news');
+  res.redirect('/random/search');
 });
 
 /* GET search page. */
