@@ -14,7 +14,15 @@ const request = require('request'); // works like fetch(), but easier to set cus
 const toSource = require('to-source'); 
 
 const Twit = require('twit');
-const T = new Twit(config.twitter);
+
+const twitOptions = {
+  consumer_key: process.env.TWITTER_CONSUMER_KEY || config.twitter.consumer_key,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET || config.twitter.consumer_secret,
+  access_token: process.env.TWITTER_ACCESS_TOKEN || config.twitter.access_token,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET || config.twitter.access_token_secret
+}
+
+const T = new Twit(twitOptions);
 
 const countWords = require('count-words'); // use: countWords(string, boolean_ignore_case)
 // stopword takes an array, removes common words, and returns an array
@@ -119,7 +127,7 @@ router.get('/:searchTerm', function(req, res, next) {
     const options = {
       url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
       headers: {
-        'X-Api-Key': config.newsApiKey
+        'X-Api-Key': process.env.NEWS_API_KEY || config.newsApiKey
       }
     }
   
