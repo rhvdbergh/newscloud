@@ -137,14 +137,14 @@ router.get('/:searchTerm', function(req, res, next) {
         let err = new Error("NewsCloud has exceed its rate limit for the News API. Please try again later.");
         let newsStr = 'Unfortunately, no news today. Unfortunately, too, no news is bad news in this case ... the News API rate limit has been exceeded for this web app.';
         next(err);
-      } else {
+      } 
         let newsStr = '';
         data.articles.forEach(article => {
           newsStr += article.title;
           newsStr += article.description;
         });
-      } // end else
-      const news = sanitizeStr(newsStr, [searchTerm]);
+        const news = sanitizeStr(newsStr, [searchTerm]);
+      // } // end else
   
     //retrieve latest searches
     let latest = [];
