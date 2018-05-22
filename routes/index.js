@@ -163,6 +163,11 @@ router.get('/:searchTerm', function(req, res, next) {
           });
         })  
         .then(() => {
+          
+          //just to make sure something is sent to the pug, if something failed
+          if (!news) { news = []; }
+          if (!tweets) { tweets = []; }
+
           // render the results to the page
           res.render('index', { 
             news: toSource(news), 
