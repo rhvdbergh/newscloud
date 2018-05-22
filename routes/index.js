@@ -30,7 +30,24 @@ const TextCleaner = require('text-cleaner');
 // second parameter is custom words to remove from string, in the form of an array
 function sanitizeStr(str, removeWords) {
 
-    let newStr = TextCleaner(str).toLowerCase().trim().stripEmails().stripHtml().removeChars({ replaceWith: ' ', exclude: "'"}).condense().valueOf();
+    let newStr = TextCleaner(str)
+      .toLowerCase()
+      .trim()
+      .stripEmails()
+      .stripHtml()
+      .removeChars({ replaceWith: ' ', exclude: "'"})
+      .condense()
+      .valueOf();
+
+      console.log(newStr);
+
+    // remove single letters and two letter words
+    newStr = newStr.split(' ').map(word => { 
+      if (word.length > 2) return word;
+    }).join(' ');
+
+    // remove introduced whitespace
+    newStr = TextCleaner(newStr).condense().valueOf();
 
     // remove common English words 
     newStr = sw.removeStopwords(newStr.split(' ')).join(' ');
