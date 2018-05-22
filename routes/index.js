@@ -39,8 +39,6 @@ function sanitizeStr(str, removeWords) {
       .condense()
       .valueOf();
 
-      console.log(newStr);
-
     // remove single letters and two letter words
     newStr = newStr.split(' ').map(word => { 
       if (word.length > 2) return word;
