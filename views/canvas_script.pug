@@ -5,12 +5,23 @@ script.
   const news_col = document.getElementById('news_col');
   const twitter_col = document.getElementById('twitter_col');
 
-  news_canvas.width = news_col.clientWidth - 30;
-  news_canvas.height = 400;
-  twitter_canvas.width = twitter_col.clientWidth - 30;
-  twitter_canvas.height = 400;
+  // redraws canvases on screen
+  function redraw(wait) {
+
+    news_canvas.width = news_col.clientWidth - 30;
+    news_canvas.height = Math.round(news_canvas.width * 0.75);
+    twitter_canvas.width = twitter_col.clientWidth - 30;
+    twitter_canvas.height = Math.round(twitter_canvas.width * 0.75);
+
+    WordCloud(document.getElementById('news_canvas'), { list: #{news}, wait: wait } );
+    WordCloud(document.getElementById('twitter_canvas'), { list: #{tweets}, wait: wait } );
+  }
+
+  redraw(50);
+
+  // if the window resizes, the canvases need to be redrawn based on the new 
+  window.addEventListener('resize', () => {
+    redraw(0);
+  });
 
 
-
-  WordCloud(document.getElementById('news_canvas'), { list: #{news}, wait: 50 } );
-  WordCloud(document.getElementById('twitter_canvas'), { list: #{tweets}, wait: 50 } );
