@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 const SearchTerm = require('../models/searchTerm');
 
-// const config = require('../bin/config.js');
+const config = require('../bin/config.js');
 
 const request = require('request'); // works like fetch(), but easier to set custom headers 
 
@@ -16,10 +16,10 @@ const toSource = require('to-source');
 const Twit = require('twit');
 
 const twitOptions = {
-  consumer_key: process.env.TWITTER_CONSUMER_KEY, // || config.twitter.consumer_key,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET, // || config.twitter.consumer_secret,
-  access_token: process.env.TWITTER_ACCESS_TOKEN, // || config.twitter.access_token,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET // || config.twitter.access_token_secret
+  consumer_key: process.env.TWITTER_CONSUMER_KEY || config.twitter.consumer_key,
+  consumer_secret: process.env.TWITTER_CONSUMER_SECRET || config.twitter.consumer_secret,
+  access_token: process.env.TWITTER_ACCESS_TOKEN || config.twitter.access_token,
+  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET || config.twitter.access_token_secret
 }
 
 const T = new Twit(twitOptions);
@@ -127,7 +127,7 @@ router.get('/:searchTerm', function(req, res, next) {
     const options = {
       url: `https://newsapi.org/v2/everything?q=${searchTerm}&pageSize=100&from=${weekAgo.toISOString()}$sortBy=relevancy`,
       headers: {
-        'X-Api-Key': process.env.NEWS_API_KEY // || config.newsApiKey
+        'X-Api-Key': process.env.NEWS_API_KEY || config.newsApiKey
       }
     }
   
