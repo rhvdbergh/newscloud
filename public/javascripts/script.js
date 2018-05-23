@@ -1,6 +1,6 @@
 // redirects to route with search term
 $('#search-form').on('submit', (event) => {
-    const searchTerm = $('#search-term').val();
+    const searchTerm = $('#search-term').val().toLowerCase().trim();
     window.location.href = `/${searchTerm}`;
     event.preventDefault();
 });
